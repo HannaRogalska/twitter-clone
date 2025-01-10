@@ -11,16 +11,15 @@ import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/data/index.js";
 
 const Post = ({ post }) => {
-	const [comment, setComment] = useState("");
-  const queryClient = useQueryClient()
-    const postOwner = post.user;
-    const isLiked = post.likes.includes(authUser._id);
+  const [comment, setComment] = useState("");
+  const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+  const queryClient = useQueryClient();
+  const postOwner = post.user;
+  const isLiked = post.likes.includes(authUser._id);
 
-    const isMyPost = authUser._id === post.user._id;
+  const isMyPost = authUser._id === post.user._id;
 
   const formattedDate = formatPostDate(post.createdAt);
-  
-  const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   const { mutate: deletePost, isPending } = useMutation({
     mutationFn: async () => {
@@ -36,14 +35,14 @@ const Post = ({ post }) => {
       }
     },
     onSuccess: () => {
-		toast.success("Post deleted successfully");
-		queryClient.invalidateQueries({queryKey: ["posts"]});
+      toast.success("Post deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
     onError: (error) => {
       toast.error(error.message || "Something went wrong. Please try again.");
     },
   });
-  const { mutate:likePost, isPending: isLiking } = useMutation({
+  const { mutate: likePost, isPending: isLiking } = useMutation({
     mutationFn: async () => {
       try {
         const res = await fetch(`/api/posts/like/${post._id}`, {
@@ -66,7 +65,7 @@ const Post = ({ post }) => {
           }
           return oldPost;
         });
-      } );
+      });
     },
     onError: (error) => {
       toast.error(error.message || "Something went wrong. Please try again.");
@@ -92,16 +91,15 @@ const Post = ({ post }) => {
         throw new Error(error);
       }
     },
-    onSuccess: () => { 
+    onSuccess: () => {
       toast.success("Comment posted successfully");
-      queryClient.invalidateQueries({queryKey: ["posts"]});
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
       setComment("");
     },
     onError: (error) => {
       toast.error(error.message || "Something went wrong. Please try again.");
     },
-    })
-
+  });
 
   const handleDeletePost = () => {
     deletePost();
@@ -109,12 +107,12 @@ const Post = ({ post }) => {
 
   const handlePostComment = (e) => {
     e.preventDefault();
-    if(isCommenting) return;
+    if (isCommenting) return;
     commentPost();
   };
 
   const handleLikePost = () => {
-    if(isLiking) return;
+    if (isLiking) return;
     likePost();
   };
 
