@@ -15,7 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/data/index.js";
 
 import useFollow from "../../hooks/useFollow";
-import useUpdateUserProfile from "../../hooks/useFollow.jsx";
+import useUpdateUserProfile from "../../hooks/useUpdateUserProfile.jsx";
 
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
@@ -174,10 +174,10 @@ const ProfilePage = () => {
 
               <div className="flex flex-col gap-4 mt-14 px-4">
                 <div className="flex flex-col">
-                  <span className="font-bold text-lg">{user?.fullName}</span>
-                  <span className="text-sm text-slate-500">
-                    @{user?.username}
+                  <span className="font-bold text-lg">
+                    {user?.fullname} {user?.username}
                   </span>
+                  <span className="text-sm text-slate-500">{user?.email}</span>
                   <span className="text-sm my-1">{user?.bio}</span>
                 </div>
 
@@ -192,7 +192,6 @@ const ProfilePage = () => {
                           rel="noreferrer"
                           className="text-sm text-blue-500 hover:underline"
                         >
-                          {/* Updated this after recording the video. I forgot to update this while recording, sorry, thx. */}
                           {user?.link}
                         </a>
                       </>
